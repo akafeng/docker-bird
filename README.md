@@ -30,8 +30,8 @@ $ docker run -d \
   --cap-add=NET_ADMIN \
   --cap-add=NET_BROADCAST \
   --cap-add=NET_RAW \
-  --network host\
-  --restart always \
+  --network=host \
+  --restart=always \
   --name=bird \
   ghcr.io/akafeng/bird
 ```
