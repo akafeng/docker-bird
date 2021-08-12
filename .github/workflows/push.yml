@@ -1,0 +1,35 @@
+name: Docker Build
+
+on:
+  push:
+    branches:
+      - '**'
+    paths-ignore:
+      - 'README.md'
+
+env:
+  USERNAME: akafeng
+  REPOSITORY: bird
+  PACKAGE_REGISTRY: ghcr.io
+
+jobs:
+  build:
+    name: Build Testing
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2.3.4
+
+      - name: Docker Login
+        run: echo ${{ secrets.GITHUB_TOKEN }} | docker login ${{ env.PACKAGE_REGISTRY }} -u ${{ env.USERNAME }} --password-stdin
+
+      - name: Docker Build
+        env:
+          STAGE_CACHE: ${{ env.PACKAGE_REGISTRY }}/${{ env.USERNAME }}/${{ env.REPOSITORY }}:stage
+        run: |
+          docker build \
+            --tag=${{ env.STAGE_CACHE }} \
+            .
+
+      - name: Docker Publish
+        run: docker push --all-tags ${{ env.PACKAGE_REGISTRY }}/${{ env.USERNAME }}/${{ env.REPOSITORY }}
