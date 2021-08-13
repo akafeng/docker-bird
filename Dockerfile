@@ -13,5 +13,4 @@ RUN set -eux \
 
 EXPOSE 179/tcp
 
-ENTRYPOINT ["/usr/sbin/bird"]
-CMD ["-f"]
+CMD ["bird", "-f"]
