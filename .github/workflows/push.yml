@@ -3,12 +3,11 @@ name: Docker Build
 on:
   push:
     branches:
-      - '**'
+      - 'main'
     paths-ignore:
       - 'README.md'
 
 env:
-  USERNAME: akafeng
   REPOSITORY: bird
   PACKAGE_REGISTRY: ghcr.io
 
@@ -17,19 +16,23 @@ jobs:
     name: Build Testing
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v2.3.4
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v1
 
-      - name: Docker Login
-        run: echo ${{ secrets.GITHUB_TOKEN }} | docker login ${{ env.PACKAGE_REGISTRY }} -u ${{ env.USERNAME }} --password-stdin
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
 
-      - name: Docker Build
-        env:
-          STAGE_CACHE: ${{ env.PACKAGE_REGISTRY }}/${{ env.USERNAME }}/${{ env.REPOSITORY }}:stage
-        run: |
-          docker build \
-            --tag=${{ env.STAGE_CACHE }} \
-            .
-
-      - name: Docker Publish
-        run: docker push --all-tags ${{ env.PACKAGE_REGISTRY }}/${{ env.USERNAME }}/${{ env.REPOSITORY }}
+      - name: Build and cache
+        uses: docker/build-push-action@v2
+        with:
+          platforms: |
+            linux/386
+            linux/amd64
+            linux/arm/v5
+            linux/arm/v7
+            linux/arm64/v8
+            linux/mips64le
+            linux/ppc64le
+            linux/s390x
+          cache-to: type=gha, mode=max
+          outputs: type=cacheonly

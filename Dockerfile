@@ -1,16 +1,50 @@
-FROM alpine:3.12
+FROM debian:bullseye-slim AS builder
 
-LABEL \
-    org.opencontainers.image.title="bird" \
-    org.opencontainers.image.authors="akafeng <i@sjy.im>" \
-    org.opencontainers.image.source="https://github.com/akafeng/docker-bird"
+ARG BIRD_VERSION="2.0.9"
+ARG BIRD_URL="https://bird.network.cz/download/bird-${BIRD_VERSION}.tar.gz"
 
 RUN set -eux \
-    && echo "@edgecommunity http://dl-cdn.alpinelinux.org/alpine/edge/community" >> /etc/apk/repositories \
-    && apk add --no-cache \
-        tzdata \
-        bird@edgecommunity
+    && apt-get update -qyy \
+    && apt-get install -qyy --no-install-recommends --no-install-suggests \
+        ca-certificates \
+        wget \
+        build-essential \
+        flex \
+        bison \
+        libncurses-dev \
+        libreadline-dev \
+        libssh-dev \
+    && rm -rf /var/lib/apt/lists/* /var/log/* \
+    \
+    && wget -O bird.tar.gz ${BIRD_URL} \
+    && tar -xzvf bird.tar.gz -C /usr/src/ \
+    && rm -rf bird.tar.gz
+
+RUN set -eux \
+    && cd /usr/src/bird-${BIRD_VERSION}/ \
+    && ./configure \
+        --prefix=/usr/ \
+        --sysconfdir=/etc/bird/ \
+        --localstatedir=/var/ \
+        --enable-libssh \
+    && make -j $(nproc) \
+    && make install \
+    && { find /usr/sbin/bird* -type f -executable -exec strip --strip-all "{}" +; }
+
+######
+
+FROM debian:bullseye-slim
+
+COPY --from=builder /usr/sbin/bird* /usr/sbin/
+COPY --from=builder /etc/bird/ /etc/bird/
+
+RUN set -eux \
+    && apt-get update -qyy \
+    && apt-get install -qyy --no-install-recommends --no-install-suggests \
+        iproute2 \
+        libssh-4 \
+    && rm -rf /var/lib/apt/lists/* /var/log/*
 
 EXPOSE 179/tcp
 
-CMD ["bird", "-f"]
+CMD ["bird", "-f", "-R"]

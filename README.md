@@ -26,7 +26,7 @@ $ docker pull ghcr.io/akafeng/bird
 
 ```bash
 $ docker run -d \
-  -v /etc/bird.conf:/etc/bird.conf \
+  -v /etc/bird/:/etc/bird/ \
   --cap-add=NET_ADMIN \
   --cap-add=NET_BROADCAST \
   --cap-add=NET_RAW \
