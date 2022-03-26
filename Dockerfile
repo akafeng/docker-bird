@@ -42,6 +42,8 @@ RUN set -eux \
     && apt-get update -qyy \
     && apt-get install -qyy --no-install-recommends --no-install-suggests \
         iproute2 \
+        libtinfo6 \
+        libreadline8 \
         libssh-4 \
     && rm -rf /var/lib/apt/lists/* /var/log/*
 
