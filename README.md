@@ -8,7 +8,7 @@
 </p>
 
 <p align="center">
-    <img src="https://img.shields.io/github/workflow/status/akafeng/docker-bird/Docker%20Build" />
+    <img src="https://img.shields.io/github/actions/workflow/status/akafeng/docker-bird/push.yml?branch=main" />
     <img src="https://img.shields.io/github/last-commit/akafeng/docker-bird" />
     <img src="https://img.shields.io/github/v/release/akafeng/docker-bird" />
     <img src="https://img.shields.io/github/release-date/akafeng/docker-bird" />
