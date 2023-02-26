@@ -1,6 +1,6 @@
 FROM debian:bullseye-slim AS builder
 
-ARG BIRD_VERSION="2.0.11"
+ARG BIRD_VERSION="2.0.12"
 ARG BIRD_URL="https://bird.network.cz/download/bird-${BIRD_VERSION}.tar.gz"
 
 RUN set -eux \
