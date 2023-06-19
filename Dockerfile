@@ -1,6 +1,6 @@
-FROM debian:bullseye-slim AS builder
+FROM debian:bookworm-slim AS builder
 
-ARG BIRD_VERSION="2.0.12"
+ARG BIRD_VERSION="2.13"
 ARG BIRD_URL="https://bird.network.cz/download/bird-${BIRD_VERSION}.tar.gz"
 
 RUN set -eux \
@@ -33,7 +33,7 @@ RUN set -eux \
 
 ######
 
-FROM debian:bullseye-slim
+FROM debian:bookworm-slim
 
 COPY --from=builder /usr/sbin/bird* /usr/sbin/
 COPY --from=builder /etc/bird/ /etc/bird/
