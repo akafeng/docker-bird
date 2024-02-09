@@ -1,6 +1,6 @@
 FROM debian:bookworm-slim AS builder
 
-ARG BIRD_VERSION="2.13.1"
+ARG BIRD_VERSION="2.14"
 ARG BIRD_URL="https://bird.network.cz/download/bird-${BIRD_VERSION}.tar.gz"
 
 RUN set -eux \
