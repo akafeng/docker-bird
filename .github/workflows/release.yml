@@ -33,8 +33,9 @@ jobs:
         with:
           images: ${{ env.PACKAGE_REGISTRY }}/${{ github.repository_owner }}/${{ env.REPOSITORY }}
           tags: |
-            type=pep440,pattern={{major}}
-            type=pep440,pattern={{version}}
+            type=semver,pattern={{major}}
+            type=semver,pattern={{major}}.{{minor}}
+            type=semver,pattern={{version}}
 
       - name: Build and push
         uses: docker/build-push-action@v5
