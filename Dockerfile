@@ -1,7 +1,7 @@
-FROM debian:bookworm-slim AS builder
+FROM debian:trixie-slim AS builder
 
-ARG BIRD_VERSION="3.1.2"
-ARG BIRD_URL="https://bird.network.cz/download/bird-${BIRD_VERSION}.tar.gz"
+ARG BIRD_VERSION="2.18.1"
+ARG BIRD_URL="https://bird.nic.cz/download/bird-${BIRD_VERSION}.tar.gz"
 
 RUN set -eux \
     && apt-get update -qyy \
@@ -33,7 +33,7 @@ RUN set -eux \
 
 ######
 
-FROM debian:bookworm-slim
+FROM debian:trixie-slim
 
 COPY --from=builder /usr/sbin/bird* /usr/sbin/
 COPY --from=builder /etc/bird/ /etc/bird/
